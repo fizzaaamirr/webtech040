@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- jQuery CDN (Required for AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinnabon PK</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Enriqueta:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Enriqueta:wght@400;500;600;700&family=Urbanist:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation bar -->
+    <header class="navbar">
+        <div class="logo-box">
+            <img src="images/logo.png" alt="Cinnabon Logo" class="logo">
+        </div>
+
+        <button class="hamburger-menu" id="hamburgerMenu" aria-label="Toggle navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
+        <nav class="nav-links" id="navLinks">
+            <a href="#">Menu</a>
+            <a href="#">Events</a>
+            <a href="#">About Us</a>
+            <a href="#">News Room</a>
+            <a href="#">Find a Cinnabon</a>
+            <a href="#">Contact Us</a>
+            <a class="order-btn" href="#">Start Order</a>
+        </nav>
+    </header>
+
+    <!-- Hero section -->
+    <section class="hero">
+
+        <div class="hero-left">
+            <div class="hero-content-left">
+                <img src="images/slider-left.png" alt="Cinnabon Holidays" class="hero-image-left">
+                <p class="tagline">Time to treat yourself.</p>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-blend"></div>
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content-right">
+                <h2>Introducing our Holiday<br>Treats Lineup.</h2>
+                <button class="shop-button">Shop Now</button>
+            </div>
+
+            <img src="images/slider-right.jpeg" alt="Holiday treats" class="hero-image-right">
+        </div>
+
+    </section>
+
+    <!-- Instagram banner -->
+    <section class="instagram-banner">
+        <div class="banner-content">
+
+            <div class="banner-left">
+                <p class="banner-subtitle">- Cinnabon -</p>
+                <h2 class="banner-title">Stay in the swirl</h2>
+            </div>
+
+            <div class="banner-middle">
+                <p>Fresh rolls, new drops and all the cozy moments we share.</p>
+            </div>
+
+            <div class="banner-right">
+                <p class="follow-text">- Follow us on IG -</p>
+                <a href="#" class="ig-button">@cinnabonpk</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Popular Picks -->
+    <section class="popular-picks">
+        <div class="picks-container">
+
+            <div class="product-cards">
+
+                <a href="menu.html" class="product-card-link">
+                    <div class="product-card">
+                        <div class="product-image" style="background-color: #00D2D3;">
+                            <img src="images/top-pick-1.jpg" alt="Pecanbon">
+                        </div>
+                        <h3>Pecanbon</h3>
+                    </div>
+                </a>
+
+                <a href="menu.html" class="product-card-link">
+                    <div class="product-card">
+                        <div class="product-image" style="background-color: #00D2D3;">
+                            <img src="images/top-pick-2.jpg" alt="Roll-on-the-Go">
+                        </div>
+                        <h3>Roll-on-the-Go</h3>
+                    </div>
+                </a>
+
+                <a href="menu.html" class="product-card-link">
+                    <div class="product-card">
+                        <div class="product-image" style="background-color: #00D2D3;">
+                            <img src="images/top-pick-3.jpg" alt="MochaLatta">
+                        </div>
+                        <h3>MochaLatta...</h3>
+                    </div>
+                </a>
+
+            </div>
+
+            <div class="picks-text">
+                <h2>Popular Picks</h2>
+                <p>What our guests are loving right now.</p>
+                <button class="view-menu-btn">View Menu</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Featured Deals -->
+    <section class="featured-deals">
+        <div class="deals-container">
+            <h2>Featured Deals</h2>
+            <p>Hot picks from our store, updated live!</p>
+            <div class="deals-grid" id="dealsGrid">
+                <p class="loading">Loading deals...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <img src="" alt="" class="modal-image" id="modalImage">
+            <h3 id="modalTitle"></h3>
+            <p class="modal-price" id="modalPrice"></p>
+            <p class="modal-description" id="modalDescription"></p>
+            <p class="modal-rating" id="modalRating"></p>
+        </div>
+    </div>
+
+    <!-- Fresh Oven -->
+    <section class="fresh-oven-section">
+        <div class="fresh-oven-container">
+
+            <div class="fresh-oven-content">
+                <h2>Fresh out of the oven, Straight to you.</h2>
+                <p>
+                    Soft, warm and dripping with frosting, just the way you love it.
+                    Order your favorites online and enjoy that bakery-fresh magic wherever you are.
+                </p>
+                <button class="start-order-btn">Start Order</button>
+            </div>
+
+            <div class="fresh-oven-image">
+                <img src="images/fresh-out-of-the-oven.jpg" alt="Fresh cinnamon rolls in oven">
+            </div>
+
+        </div>
+    </section>
+
+    <div class="divider-line"></div>
+
+    <!-- CinnaPacks -->
+    <section class="cinnapacks-section">
+        <div class="cinnapacks-container">
+
+            <div class="cinnapacks-image">
+                <img src="images/CinnaPacks.jpg" alt="CinnaPacks">
+            </div>
+
+            <div class="CinnaPacks-content">
+                <h2>Save with CinnaPacks®</h2>
+                <p>
+                    A box full of ooey-gooey happiness, baked for every kind of craving.
+                    Whether it’s a solo treat or a sweet pick-me-up for the crew,
+                    CinnaPacks® are the easiest way to keep the frosting flowing.
+                </p>
+                <button class="explore-btn">Explore CinnaPacks</button>
+            </div>
+
+        </div>
+    </section>
+
+    <div class="divider-line"></div>
+
+    <!-- Gathering -->
+    <section class="gathering-section">
+        <div class="gathering-container">
+
+            <div class="gathering-content">
+                <h2>Big Day? We’ll Bring the Swirl</h2>
+                <p>
+                    Big day, small gathering, or something in between.
+                    Cinnabon brings the sweetness that makes every moment worth celebrating.
+                </p>
+                <button class="plan-event-btn">Plan Your Event</button>
+            </div>
+
+            <div class="gathering-image">
+                <img src="images/gatherings.jpg" alt="Cinnamon rolls platter">
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Event Cards -->
+    <section class="event-cards-section">
+        <div class="event-cards-container">
+
+            <div class="event-card">
+                <div class="event-card-content">
+                    <h3>Corporate Gifts</h3>
+                    <p>Show appreciation the sweetest way possible...</p>
+                    <a href="#" class="event-link">Order Now →</a>
+                </div>
+                <div class="event-card-image">
+                    <img src="images/corporate-gifts.jpg" alt="Corporate gift boxes">
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="event-card-content">
+                    <h3>Events & Catering</h3>
+                    <p>Make your celebrations unforgettable...</p>
+                    <a href="#" class="event-link">Get in Touch →</a>
+                </div>
+                <div class="event-card-image">
+                    <img src="images/catering.jpg" alt="Stacked Cinnabon boxes">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!--Footer-->
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <!-- Company Column -->
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">Menu</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">News Room</a></li>
+                    <li><a href="#">Find a Cinnabon</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <!-- Quick Links Column -->
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Nutrition & Allergens</a></li>
+                    <li><a href="#">Delivery Information</a></li>
+                    <li><a href="#">Feedback</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <!-- General Enquiries Column -->
+            <div class="footer-column">
+                <h4>General Enquiries</h4>
+                <ul>
+                    <li>042-111-1-ROLLS (76557)</li>
+                    <li>info@cinnabon.pk</li>
+                </ul>
+            </div>
+            <!-- Logo Column -->
+            <div class="footer-logo">
+                <img src="images/logo.png" alt="Cinnabon">
+            </div>
+        </div>
+        <!-- Bottom Bar -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 Cinnabon. All Rights Reserved.</p>
+            <p>Powered by ACIan</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
