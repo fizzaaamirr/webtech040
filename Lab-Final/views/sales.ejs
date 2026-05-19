@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Dashboard - Cinnabon PK</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Enriqueta:wght@400;500;600;700&family=Urbanist:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- jQuery from CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        /* ── Layout (matches admin dashboard) ── */
+        .admin-layout   { display: flex; min-height: 100vh; margin-top: 80px; }
+        .admin-sidebar  { width: 240px; background: #071D49; color: white; padding: 20px; font-family: 'Enriqueta', serif; }
+        .admin-sidebar a { display: block; color: white; padding: 10px; text-decoration: none; margin-bottom: 10px; border-radius: 5px; }
+        .admin-sidebar a:hover,
+        .admin-sidebar a.active { background: #2BD5C3; color: #071D49; font-weight: bold; }
+        .admin-content  { flex: 1; padding: 30px; background: #f8f8f8; font-family: 'Enriqueta', serif; }
+
+        /* ── Stat cards ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px 24px;
+            box-shadow: 0 2px 12px rgba(7,29,73,.08);
+            border-left: 5px solid #2BD5C3;
+            font-family: 'Urbanist', sans-serif;
+        }
+        .stat-card.revenue { border-left-color: #27ae60; }
+        .stat-card.orders  { border-left-color: #2980b9; }
+        .stat-card.top     { border-left-color: #f39c12; }
+
+        .stat-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #071D49;
+            line-height: 1;
+        }
+        .stat-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 6px;
+        }
+
+        /* ── Live indicator ── */
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Urbanist', sans-serif;
+            font-size: 12px;
+            color: #27ae60;
+            background: #eafaf1;
+            border-radius: 20px;
+            padding: 4px 12px;
+            margin-bottom: 28px;
+        }
+        .pulse {
+            width: 8px; height: 8px;
+            background: #27ae60;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%  { box-shadow: 0 0 0 0 rgba(39,174,96,.4); }
+            70% { box-shadow: 0 0 0 8px rgba(39,174,96,0); }
+            100%{ box-shadow: 0 0 0 0 rgba(39,174,96,0); }
+        }
+
+        /* ── Recent orders table ── */
+        .section-title {
+            font-size: 20px;
+            color: #071D49;
+            margin-bottom: 16px;
+            font-family: 'Enriqueta', serif;
+        }
+        .admin-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-family: 'Urbanist', sans-serif; }
+        .admin-table th, .admin-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .admin-table th { background: #071D49; color: white; }
+        .status-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .status-pending    { background: #fef9e7; color: #d68910; }
+        .status-processing { background: #eaf4fb; color: #2471a3; }
+        .status-completed  { background: #eafaf1; color: #1e8449; }
+        .status-cancelled  { background: #fdecea; color: #c0392b; }
+
+        .last-updated {
+            font-family: 'Urbanist', sans-serif;
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 10px;
+            text-align: right;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-family: 'Urbanist', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <!-- ── Navbar (matches existing pages) ── -->
+    <header class="navbar">
+        <div class="logo-box">
+            <img src="/images/logo.png" alt="Cinnabon Logo" class="logo">
+        </div>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/products">Products</a>
+            <a href="/admin">Admin</a>
+            <a href="/sales" class="active">Sales</a>
+            <% if (currentUser.isLoggedIn) { %>
+                <span style="font-family:'Urbanist',sans-serif;font-size:14px;color:#071D49;">
+                    Hi, <%= currentUser.name.split(' ')[0] %>
+                </span>
+                <form action="/auth/logout" method="POST" style="display:inline;">
+                    <button type="submit" style="background:none;border:none;cursor:pointer;font-family:'Urbanist',sans-serif;font-size:14px;color:#071D49;padding:0;">Logout</button>
+                </form>
+            <% } %>
+        </nav>
+    </header>
+
+    <div class="admin-layout">
+        <!-- ── Sidebar ── -->
+        <div class="admin-sidebar">
+            <h3>Admin Panel</h3>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/add">Add Product</a>
+            <a href="/sales" class="active">Sales Dashboard</a>
+            <a href="/">View Store</a>
+        </div>
+
+        <!-- ── Main content ── -->
+        <div class="admin-content">
+            <h2 style="margin-bottom:8px;">Sales Dashboard</h2>
+
+            <div class="live-badge">
+                <span class="pulse"></span>
+                Live &mdash; updates every 10 seconds
+            </div>
+
+            <!-- ── Stat Cards ── -->
+            <div class="stats-grid">
+                <div class="stat-card revenue">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value" id="stat-revenue">
+                        $<%= totalRevenue.toFixed(2) %>
+                    </div>
+                    <div class="stat-sub">All time</div>
+                </div>
+
+                <div class="stat-card orders">
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value" id="stat-orders">
+                        <%= totalOrders %>
+                    </div>
+                    <div class="stat-sub">All time</div>
+                </div>
+
+                <div class="stat-card top">
+                    <div class="stat-label">Top Selling Product</div>
+                    <div class="stat-value" id="stat-top-name" style="font-size:22px; padding-top:4px;">
+                        <%= topProduct.name %>
+                    </div>
+                    <div class="stat-sub" id="stat-top-units">
+                        <%= topProduct.unitsSold %> unit<%= topProduct.unitsSold !== 1 ? 's' : '' %> sold
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Recent Transactions ── -->
+            <div class="section-title">Recent Transactions</div>
+
+            <% if (recentOrders.length === 0) { %>
+                <div class="empty-state">
+                    <p>No orders yet. Place an order through the API to see data here.</p>
+                </div>
+            <% } else { %>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% recentOrders.forEach(order => { %>
+                        <tr>
+                            <td style="font-size:11px;color:#aaa;">#<%= order._id.toString().slice(-8).toUpperCase() %></td>
+                            <td><%= order.items.map(i => i.name).join(', ') %></td>
+                            <td><strong>$<%= order.totalAmount.toFixed(2) %></strong></td>
+                            <td style="text-transform:capitalize;"><%= order.paymentMethod %></td>
+                            <td>
+                                <span class="status-badge status-<%= order.status %>">
+                                    <%= order.status %>
+                                </span>
+                            </td>
+                            <td><%= new Date(order.createdAt).toLocaleDateString('en-PK', { day:'numeric', month:'short', year:'numeric' }) %></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+
+            <div class="last-updated" id="last-updated">Last updated: just now</div>
+        </div>
+    </div>
+
+    <script>
+        // ── jQuery polling — hits /api/sales-data every 10 seconds ──
+        $(document).ready(function () {
+
+            function updateDashboard() {
+                $.ajax({
+                    url: '/api/sales-data',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        // Update stat cards
+                        $('#stat-revenue').text('$' + parseFloat(data.totalRevenue).toFixed(2));
+                        $('#stat-orders').text(data.totalOrders);
+                        $('#stat-top-name').text(data.topProduct.name);
+
+                        var units = data.topProduct.unitsSold;
+                        $('#stat-top-units').text(units + ' unit' + (units !== 1 ? 's' : '') + ' sold');
+
+                        // Timestamp
+                        var now = new Date();
+                        var timeStr = now.toLocaleTimeString('en-PK', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                        $('#last-updated').text('Last updated: ' + timeStr);
+                    },
+                    error: function (xhr) {
+                        console.error('Sales data fetch failed:', xhr.status, xhr.statusText);
+                    }
+                });
+            }
+
+            // Poll every 10 seconds
+            setInterval(updateDashboard, 10000);
+        });
+    </script>
+</body>
+</html>
